@@ -117,9 +117,9 @@ if (isProduction) {
       test: /\.pcss$/,
       exclude: /node_modules/,
       use: [
-        'style-loader?sourceMap',
+        'vue-style-loader',
         'css-loader?sourceMap',
-        'postcss-loader?sourceMap',
+        'postcss-loader',
       ],
     }
   );
