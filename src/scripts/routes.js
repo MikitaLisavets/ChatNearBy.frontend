@@ -1,28 +1,20 @@
 import React, { Component } from 'react';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { Router, Route, Redirect, browserHistory } from 'react-router';
 
 import App from 'views/App';
-import Dashboard from 'views/Dashboard';
-import About from 'views/About';
-import NotFound from 'views/NotFound';
-
-const publicPath = '/';
-
-export const routeCodes = {
-  DASHBOARD: publicPath,
-  ABOUT: `${ publicPath }about`,
-};
+import Home from 'views/Home';
+import Chat from 'views/Chat';
+import Settings from 'views/Settings';
 
 export default class Routes extends Component {
   render() {
     return (
       <Router history={ browserHistory }>
-        <Route path={ publicPath } component={ App }>
-          <IndexRoute component={ Dashboard } />
-          <Route path={ routeCodes.POCKET_AUTH } component={ Dashboard } />
-          <Route path={ routeCodes.ABOUT } component={ About } />
-
-          <Route path='*' component={ NotFound } />
+        <Route component={ App }>
+          <Route path='/' component={ Home } />
+          <Route path='/chat/:id' component={ Chat } />
+          <Route path='/settings' component={ Settings } />
+          <Redirect from='/*' to='/' />
         </Route>
       </Router>
     );

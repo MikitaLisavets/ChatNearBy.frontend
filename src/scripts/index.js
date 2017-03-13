@@ -1,55 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import 'babel-polyfill';
-import logger from 'dev/logger';
 
-import rootReducer from 'reducers';
-import Routes from 'routes';
-import DevTools from 'dev/redux-dev-tools';
+import rootReducer from './reducers';
+import Routes from './routes';
 
+import logger from './dev/logger';
 import '../styles/app.pcss';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Creating store
-let store = null;
+let middleware = null;
 
 if (isProduction) {
-  // In production adding only thunk middleware
-  const middleware = applyMiddleware(thunk);
-
-  store = createStore(
-    rootReducer,
-    middleware
-  );
+  middleware = applyMiddleware(thunk);
 } else {
-  // In development mode beside thunk
-  // logger and DevTools are added
-  const middleware = applyMiddleware(thunk, logger);
-  const enhancer = compose(
-    middleware,
-    DevTools.instrument()
-  );
-
-  store = createStore(
-    rootReducer,
-    enhancer
-  );
+  middleware = applyMiddleware(thunk, logger);
 }
 
+const store = createStore(
+  rootReducer,
+  middleware
+);
 
-// Render it to DOM
 ReactDOM.render(
   <Provider store={ store }>
-    { isProduction ?
-      <Routes /> :
-      <div>
-        <Routes />
-        <DevTools />
-      </div> }
+    <Routes />
   </Provider>,
   document.getElementById('root')
 );
