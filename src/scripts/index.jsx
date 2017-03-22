@@ -8,7 +8,7 @@ import rootReducer from './reducers';
 import Routes from './routes';
 
 import logger from './dev/logger';
-import '../styles/app.pcss';
+import '../styles/style.pcss';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -19,6 +19,7 @@ if (isProduction) {
 } else {
   middleware = applyMiddleware(thunk, logger);
 }
+
 
 const store = createStore(
   rootReducer,

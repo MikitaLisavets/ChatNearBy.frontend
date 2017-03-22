@@ -4,6 +4,7 @@ const path = require('path');
 const DashboardPlugin = require('webpack-dashboard/plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const precss = require('precss');
 const autoprefixer = require('autoprefixer');
 
@@ -33,10 +34,13 @@ const plugins = [
     path: buildPath,
     filename: 'index.html',
   }),
+  new CopyWebpackPlugin([
+    { from: assetsPath, to: buildPath + '/assets' },
+  ]),
   new webpack.LoaderOptionsPlugin({
     options: {
       postcss: [
-        precss(),
+        precss({ prefix: '', extension: 'pcss' }),
         autoprefixer({
           browsers: [
             'last 3 version',
@@ -59,8 +63,8 @@ const rules = [
     ],
   },
   {
-    test: /./,
-    include: assetsPath,
+    test: /\.(png|woff|woff2|eot|ttf|svg|json)$/,
+    include: sourcePath,
     use: 'url-loader?limit=20480&name=assets/[name].[ext]',
   },
 ];
@@ -129,7 +133,7 @@ module.exports = {
   devtool: isProduction ? 'eval' : 'source-map',
   context: jsSourcePath,
   entry: {
-    js: './index.js',
+    js: './index.jsx',
     vendor: [
       'babel-polyfill',
       'es6-promise',
