@@ -5,7 +5,9 @@ const DashboardPlugin = require('webpack-dashboard/plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 const precss = require('precss');
+const atImport = require('postcss-import');
 const autoprefixer = require('autoprefixer');
 
 const nodeEnv = process.env.NODE_ENV || 'development';
@@ -40,7 +42,8 @@ const plugins = [
   new webpack.LoaderOptionsPlugin({
     options: {
       postcss: [
-        precss({ prefix: '', extension: 'pcss' }),
+        atImport({ addDependencyTo: webpack }),
+        precss(),
         autoprefixer({
           browsers: [
             'last 3 version',
@@ -100,6 +103,7 @@ if (isProduction) {
   rules.push(
     {
       test: /\.pcss$/,
+      exclude: /node_modules/,
       loader: ExtractTextPlugin.extract({
         use: [
           'css-loader',
@@ -145,6 +149,8 @@ module.exports = {
       'react',
       'redux-thunk',
       'redux',
+      'react-notification-system',
+      'classnames'
     ],
   },
   output: {
